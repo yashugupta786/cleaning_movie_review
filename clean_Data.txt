@@ -1,0 +1,38 @@
+
+import tensorflow as tf
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
+import numpy as np
+import random
+import pickle
+from collections import Counter
+lemmatizer=WordNetLemmatizer()
+stop_words=stopwords.words('english')
+import tensorflow as tf
+hm_lines= 10000000
+new_lexicon=[]
+def create_lexicon(pos,neg):
+    lexicon=[]
+    for fi in [pos,neg]:
+        with open(fi ,'r') as f:
+            contents=f.readlines()
+            for l in contents[:hm_lines]:
+                all_words=word_tokenize(l)
+                lexicon +=list(all_words)
+    lexicon=[lemmatizer.lemmatize(i) for i in lexicon]
+    print(type(lexicon))
+    l2=[]
+    for new_word in lexicon:
+        if new_word not in stop_words and new_word not in ('!',',',':','.','--','``'):
+            new_lexicon.append(new_word)
+    # print(new_lexicon)
+    word_counts=Counter(new_lexicon)
+    print(word_counts)
+
+    for w in word_counts:
+        if 1800>word_counts[w]>40:
+            l2.append(w)
+    print(l2)
+    return  l2
